@@ -1,4 +1,4 @@
-if ($PSVersionTable.PSVersion.Major -le 2) { return }
+if ($PSVersionTable.PSVersion.Major -le 2 -or $IsLinux -or $IsOSX) { return }
 
 Set-StrictMode -Version Latest
 
