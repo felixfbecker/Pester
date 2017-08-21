@@ -1,4 +1,4 @@
-if ($(GetPesterOS) -ne 'Windows') { return }
+if ( $PSVersionTable.PSEdition -eq 'Core') { return }
 
 # Work around bug in PowerShell 2 type loading...
 [String]$GherkinDllPath = "${Script:PesterRoot}{0}lib{0}gherkin.dll" -f [System.IO.Path]::DirectorySeparatorChar

@@ -1,4 +1,4 @@
-if ($PSVersionTable.PSVersion.Major -le 2 -or ((GetPesterOS) -ne 'Windows')) { return }
+if ($PSVersionTable.PSVersion.Major -le 2 -or $PSVersionTable.PSEdition -eq 'Core') { return }
 
 Set-StrictMode -Version Latest
 $scriptRoot = Split-Path (Split-Path $MyInvocation.MyCommand.Path)
