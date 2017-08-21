@@ -1,5 +1,8 @@
+if ($(GetPesterOS) -ne 'Windows') { return }
+
 # Work around bug in PowerShell 2 type loading...
-Microsoft.PowerShell.Core\Import-Module -Name "${Script:PesterRoot}\lib\Gherkin.dll"
+[String]$GherkinDllPath = "${Script:PesterRoot}{0}lib{0}gherkin.dll" -f [System.IO.Path]::DirectorySeparatorChar
+Microsoft.PowerShell.Core\Import-Module -Name $GherkinDllPath
 
 $GherkinSteps = @{}
 $GherkinHooks = @{
