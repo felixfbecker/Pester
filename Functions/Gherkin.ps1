@@ -1,4 +1,12 @@
-if ($(GetPesterOS) -ne 'Windows') { return }
+#You need import functions from Environment.ps1 before the first usage because
+#the whole Pester module content is imported later
+$Script:FunctionsRoot = Split-Path -Path $MyInvocation.MyCommand.Path
+
+$Script:ModuleName = Join-Path -Path $FunctionsRoot -ChildPath 'Environment.ps1'
+
+. $(Resolve-Path -Path $ModuleName) | Out-Null
+
+if ((GetPesterOS) -ne 'Windows'){ return }
 
 # Work around bug in PowerShell 2 type loading...
 [String]$GherkinDllPath = "${Script:PesterRoot}{0}lib{0}gherkin.dll" -f [System.IO.Path]::DirectorySeparatorChar

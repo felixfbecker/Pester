@@ -1,4 +1,12 @@
-if ($PSVersionTable.PSVersion.Major -le 2 -or ((GetPesterOS) -ne 'Windows')) { return }
+#You need import functions from Environment.ps1 before the first usage because
+#the whole Pester module content is imported later
+$Script:FunctionsRoot = Split-Path -Path $MyInvocation.MyCommand.Path
+
+$Script:ModuleName = Join-Path -Path $FunctionsRoot -ChildPath 'Environment.ps1'
+
+. $(Resolve-Path -Path $ModuleName) | Out-Null
+
+if ($PSVersionTable.PSVersion.Major -le 2 -or ((GetPesterOS) -ne 'Windows')){ return }
 
 Set-StrictMode -Version Latest
 
