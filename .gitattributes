@@ -1,3 +1,10 @@
 # Auto detect text files and perform LF normalization
-* text=auto
+* text eol=crlf
 *.ps1 text
+*.psm1 text
+*.psd1 text
+*.ps1xml
+*.md text
+*.feature
+*.xsd
+*.dtd
