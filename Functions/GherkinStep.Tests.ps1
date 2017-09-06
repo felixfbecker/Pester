@@ -1,4 +1,9 @@
-if ($PSVersionTable.PSVersion.Major -le 2 -or $PSVersionTable.PSEdition -eq 'Core') { return }
+if(!$IsCoreCLR) {
+    Microsoft.PowerShell.Core\Import-Module -Name "${Script:PesterRoot}\lib\legacy\Gherkin.dll"
+} else {
+    [String]$GherkinCoreDllPath = "${Script:PesterRoot}{0}lib{0}core{0}Gherkin.dll" -f [System.IO.Path]::DirectorySeparatorChar
+    Microsoft.PowerShell.Core\Import-Module -Name $GherkinCoreDllPath
+}
 
 Set-StrictMode -Version Latest
 
