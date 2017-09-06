@@ -1,8 +1,11 @@
 if ( $PSVersionTable.PSEdition -eq 'Core') { return }
 
 # Work around bug in PowerShell 2 type loading...
-[String]$GherkinDllPath = "${Script:PesterRoot}{0}lib{0}gherkin.dll" -f [System.IO.Path]::DirectorySeparatorChar
-Microsoft.PowerShell.Core\Import-Module -Name $GherkinDllPath
+if(!$IsCoreClr) {
+    Microsoft.PowerShell.Core\Import-Module -Name "${Script:PesterRoot}\lib\core\Gherkin.dll"
+} else {
+    Microsoft.PowerShell.Core\Import-Module -Name "${Script:PesterRoot}\lib\legacy\Gherkin.dll"
+}
 
 $GherkinSteps = @{}
 $GherkinHooks = @{
