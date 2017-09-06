@@ -2,9 +2,9 @@ if ( $PSVersionTable.PSEdition -eq 'Core') { return }
 
 # Work around bug in PowerShell 2 type loading...
 if(!$IsCoreClr) {
-    Microsoft.PowerShell.Core\Import-Module -Name "${Script:PesterRoot}\lib\core\Gherkin.dll"
-} else {
     Microsoft.PowerShell.Core\Import-Module -Name "${Script:PesterRoot}\lib\legacy\Gherkin.dll"
+} else {
+    Microsoft.PowerShell.Core\Import-Module -Name "${Script:PesterRoot}\lib\core\Gherkin.dll"
 }
 
 $GherkinSteps = @{}
