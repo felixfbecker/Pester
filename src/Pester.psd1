@@ -26,6 +26,10 @@
 
     TypesToProcess    = @()
 
+    FormatsToProcess = @(
+        'Formats/PesterRSpecTestRun.Format.ps1xml'
+    )
+
     # Functions to export from this module
     FunctionsToExport = @(
         'Invoke-Pester'
@@ -69,6 +73,9 @@
         'New-MockObject'
 
         'New-Fixture'
+
+        # helper
+        'Get-PesterHumanTime'
     )
 
     # # Cmdlets to export from this module

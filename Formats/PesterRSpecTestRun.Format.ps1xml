@@ -1,0 +1,263 @@
+<Configuration>
+    <Controls>
+        <Control>
+            <Name>PesterContainer</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <NewLine />
+                            <ExpressionBinding>
+                                <ScriptBlock>
+                                    "`e[35;1mTests from '$($_.Content)'`e[0m"
+                                </ScriptBlock>
+                            </ExpressionBinding>
+                            <NewLine />
+                            <Frame>
+                                <LeftIndent>1</LeftIndent>
+                                <CustomItem>
+                                    <ExpressionBinding>
+                                        <PropertyName>Blocks</PropertyName>
+                                        <EnumerateCollection>true</EnumerateCollection>
+                                        <CustomControlName>PesterBlock</CustomControlName>
+                                    </ExpressionBinding>
+                                    <ExpressionBinding>
+                                        <PropertyName>Tests</PropertyName>
+                                        <EnumerateCollection>true</EnumerateCollection>
+                                        <CustomControlName>PesterTest</CustomControlName>
+                                    </ExpressionBinding>
+                                </CustomItem>
+                            </Frame>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+        <Control>
+            <Name>PesterBlock</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>
+                                    $obj = $_
+                                    try {
+                                        $color = if ($_.FrameworkData.CommandUsed -eq 'Context') {
+                                            "`e[36m"
+                                        } elseif ($_.Passed) {
+                                            "`e[32;1m"
+                                        } else {
+                                            "`e[31;1m"
+                                        }
+                                        $verb = if ($_.FrameworkData.CommandUsed -eq 'Context') {
+                                            'Context'
+                                        } else {
+                                            'Describing'
+                                        }
+                                        "$($color)$($verb) $($_.Name)`e[0m"
+                                    } catch {
+                                        $_ | Out-string | write-warning
+                                        $obj | out-string | write-warning
+                                    }
+                                </ScriptBlock>
+                            </ExpressionBinding>
+                            <NewLine />
+                            <Frame>
+                                <LeftIndent>1</LeftIndent>
+                                <CustomItem>
+                                    <ExpressionBinding>
+                                        <PropertyName>Order</PropertyName>
+                                        <EnumerateCollection>true</EnumerateCollection>
+                                        <CustomControl>
+                                            <CustomEntries>
+                                                <CustomEntry>
+                                                    <CustomItem>
+                                                        <Text>Unknown Entry</Text>
+                                                    </CustomItem>
+                                                </CustomEntry>
+                                                <CustomEntry>
+                                                    <EntrySelectedBy>
+                                                        <TypeName>Pester.Block</TypeName>
+                                                    </EntrySelectedBy>
+                                                    <CustomItem>
+                                                        <ExpressionBinding>
+                                                            <CustomControlName>PesterBlock</CustomControlName>
+                                                        </ExpressionBinding>
+                                                    </CustomItem>
+                                                </CustomEntry>
+                                                <CustomEntry>
+                                                    <EntrySelectedBy>
+                                                        <TypeName>Pester.Test</TypeName>
+                                                    </EntrySelectedBy>
+                                                    <CustomItem>
+                                                        <ExpressionBinding>
+                                                            <CustomControlName>PesterTest</CustomControlName>
+                                                        </ExpressionBinding>
+                                                    </CustomItem>
+                                                </CustomEntry>
+                                            </CustomEntries>
+                                        </CustomControl>
+                                    </ExpressionBinding>
+                                </CustomItem>
+                            </Frame>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+        <Control>
+            <Name>PesterTest</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>
+                                    try {
+                                        $prefix = if ($_.Skipped) {
+                                            "`e[33m[!]"
+                                        } elseif ($_.Passed) {
+                                            "`e[32m[+]"
+                                        } else {
+                                            "`e[31m[-]"
+                                        }
+                                        $output = " $prefix $($_.Name)"
+                                        if ($_.Skipped) {
+                                            $output += ", is skipped`e[0m"
+                                        } else {
+                                            $humanTime = "$(Get-PesterHumanTime ($_.Duration + $_.FrameworkDuration)) ($(Get-PesterHumanTime $_.Duration)|$(Get-PesterHumanTime $_.FrameworkDuration))"
+                                            $output += "`e[0m `e[2m$humanTime`e[0m"
+                                        }
+                                        $output
+                                    } catch {
+                                        $_ | Out-String | Write-Warning
+                                    }
+                                </ScriptBlock>
+                            </ExpressionBinding>
+                            <NewLine />
+                            <ExpressionBinding>
+                                <PropertyName>ErrorRecord</PropertyName>
+                                <ItemSelectionCondition>
+                                    <PropertyName>ErrorRecord</PropertyName>
+                                </ItemSelectionCondition>
+                                <CustomControlName>PesterError</CustomControlName>
+                            </ExpressionBinding>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+        <Control>
+            <Name>PesterError</Name>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <Frame>
+                                <LeftIndent>4</LeftIndent>
+                                <CustomItem>
+                                    <ExpressionBinding>
+                                        <ScriptBlock>
+                                            try {
+                                                $output = "`e[31m"
+                                                if ($_.DisplayErrorMessage) {
+                                                    $output += $_.DisplayErrorMessage
+                                                }
+                                                if ($_.DisplayStackTrace) {
+                                                    $output += $_.DisplayErrorMessage
+                                                }
+                                                if (!$_.DisplayErrorMessage -and !$_.DisplayStackTrace) {
+                                                    $output += $_.ErrorRecord | Out-String
+                                                }
+                                                $output += "`e[0m`n"
+                                                $output
+                                            } catch {
+                                                $_ | Out-String | Write-Warning
+                                            }
+                                        </ScriptBlock>
+                                    </ExpressionBinding>
+                                </CustomItem>
+                            </Frame>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </Control>
+    </Controls>
+    <ViewDefinitions>
+        <View>
+            <Name>PesterRSpecTestRun</Name>
+            <ViewSelectedBy>
+                <TypeName>PesterRSpecTestRun</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <PropertyName>Containers</PropertyName>
+                                <EnumerateCollection>true</EnumerateCollection>
+                                <CustomControlName>PesterContainer</CustomControlName>
+                            </ExpressionBinding>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+        <View>
+            <Name>PesterContainer</Name>
+            <ViewSelectedBy>
+                <TypeName>Pester.Container</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>$_</ScriptBlock>
+                                <CustomControlName>PesterContainer</CustomControlName>
+                            </ExpressionBinding>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+        <View>
+            <Name>PesterBlock</Name>
+            <ViewSelectedBy>
+                <TypeName>Pester.Block</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>$_</ScriptBlock>
+                                <CustomControlName>PesterBlock</CustomControlName>
+                            </ExpressionBinding>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+        <View>
+            <Name>PesterTest</Name>
+            <ViewSelectedBy>
+                <TypeName>Pester.Test</TypeName>
+            </ViewSelectedBy>
+            <CustomControl>
+                <CustomEntries>
+                    <CustomEntry>
+                        <CustomItem>
+                            <ExpressionBinding>
+                                <ScriptBlock>$_</ScriptBlock>
+                                <CustomControlName>PesterTest</CustomControlName>
+                            </ExpressionBinding>
+                        </CustomItem>
+                    </CustomEntry>
+                </CustomEntries>
+            </CustomControl>
+        </View>
+    </ViewDefinitions>
+</Configuration>

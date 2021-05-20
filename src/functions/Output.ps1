@@ -195,7 +195,7 @@ function Write-PesterReport {
     )
     # if(-not ($PesterState.Show | Has-Flag Summary)) { return }
 
-    & $SafeCommands['Write-Host'] ($ReportStrings.Timing -f (Get-HumanTime ($RunResult.Duration))) -Foreground $ReportTheme.Foreground
+    & $SafeCommands['Write-Host'] ($ReportStrings.Timing -f (Get-PesterHumanTime ($RunResult.Duration))) -Foreground $ReportTheme.Foreground
 
     $Success, $Failure = if ($RunResult.FailedCount -gt 0) {
         $ReportTheme.Foreground, $ReportTheme.Fail
@@ -572,7 +572,7 @@ function Get-WriteScreenPlugin ($Verbosity) {
         }
 
         if ('Normal' -eq $PesterPreference.Output.Verbosity.Value) {
-            $humanTime = "$(Get-HumanTime ($Context.Result.Duration)) ($(Get-HumanTime $Context.Result.UserDuration)|$(Get-HumanTime $Context.Result.FrameworkDuration))"
+            $humanTime = "$(Get-PesterHumanTime ($Context.Result.Duration)) ($(Get-PesterHumanTime $Context.Result.UserDuration)|$(Get-PesterHumanTime $Context.Result.FrameworkDuration))"
 
             if ($Context.Result.Passed) {
                 & $SafeCommands['Write-Host'] -ForegroundColor $ReportTheme.Pass "[+] $($Context.Result.Item)" -NoNewLine
@@ -630,7 +630,7 @@ function Get-WriteScreenPlugin ($Verbosity) {
             throw "Unsupported level out output '$($PesterPreference.Output.Verbosity.Value)'"
         }
 
-        $humanTime = "$(Get-HumanTime ($_test.Duration)) ($(Get-HumanTime $_test.UserDuration)|$(Get-HumanTime $_test.FrameworkDuration))"
+        $humanTime = "$(Get-PesterHumanTime ($_test.Duration)) ($(Get-PesterHumanTime $_test.UserDuration)|$(Get-PesterHumanTime $_test.FrameworkDuration))"
 
         if ($PesterPreference.Debug.ShowNavigationMarkers.Value) {
             $out += ", $($_test.ScriptBlock.File):$($_Test.StartLine)"
